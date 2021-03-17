@@ -1,0 +1,5 @@
+Restarts the Bluetooth service.
+
+Bluetooth is initially unavailable when switching from an X
+session to a Wayland session, and restarting through systemd is
+the only way to fix it.
