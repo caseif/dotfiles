@@ -1,0 +1,4 @@
+Quick and dirty script to manually update Discord.
+
+This script is especially useful on non-Debian/Fedora systems immediately after a
+client update, before the new version has been published to the repos.

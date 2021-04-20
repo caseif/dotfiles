@@ -1,5 +1,7 @@
 #/usr/bin/env bash
 
+export SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS=0
+
 export LIBVIRT_DEFAULT_URI=qemu:///system
 
 export DOTNET_CLI_TELEMETRY_OPTOUT=1

@@ -1,0 +1,4 @@
+Utilities for creating RDP sessions.
+
+FreeRDP's command-line interface is slightly unintuitive and
+this script provides a stripped-down, simplified abstraction.

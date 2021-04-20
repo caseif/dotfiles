@@ -1,0 +1,20 @@
+#!/usr/bin/env sh
+
+sudo true
+
+dl_url="https://discord.com/api/download?platform=linux&format=tar.gz"
+
+dl_path="/tmp/discord_latest.tar.gz"
+
+echo "Downloading latest client..."
+wget "$dl_url" -O "$dl_path"
+
+echo "Extracting archive..."
+sudo tar xzf "$dl_path" -C /opt/
+
+if [[ -d "/opt/Discord" ]]; then
+    echo "Renaming archive output..."
+    sudo mv "/opt/Discord" "/opt/discord"
+fi
+
+echo "Done!"

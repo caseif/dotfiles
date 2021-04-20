@@ -1,0 +1,5 @@
+Rebuilds the driver for the 8761BU Bluetooth chipset.
+
+This is required after each kernel update. There's probably a
+better way to automate this but IMO it's not worth the time
+investment.

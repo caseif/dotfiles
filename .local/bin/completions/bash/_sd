@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 _sd_completion() {
-    wd="~/.sd/"
+    wd="$HOME/.sd/"
 
     start_index=1
     if [ "${COMP_WORDS[1]}" == "help" ]; then
@@ -13,8 +13,6 @@ _sd_completion() {
         wd+="$arg/"
     done
 
-    wd="$(eval echo "$wd")"
-
     local cur;
     local base="$wd"
     _get_comp_words_by_ref cur;
@@ -22,7 +20,7 @@ _sd_completion() {
     cur="$base$cur"
     _filedir
 
-    remove=()
+    real_reply=()
     for i in "${!COMPREPLY[@]}"; do
         script="${COMPREPLY[$i]}"
         if [[ $script == */ ]]; then
@@ -31,17 +29,16 @@ _sd_completion() {
         fi
         
         if [[ $script == *.help ]]; then
-            remove+=("$script")
+            continue
         fi
+
+        real_reply+=("${script#"$base"}")
     done
 
-    for del in "${remove[@]}"; do
-        COMPREPLY=("${COMPREPLY[@]/$del}")
-    done
-    
-    COMPREPLY=("${COMPREPLY[@]#$base}")
+    COMPREPLY=("${real_reply[@]}")
 
     if [ ${#COMP_WORDS[@]} -eq 2 ]; then
-        COMPREPLY+=("help")
+        const_words=("help")
+        COMPREPLY+=($(compgen -W "$const_words" "$orig_cur"))
     fi
 } && complete -F _sd_completion sd

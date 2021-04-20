@@ -1,42 +1,6 @@
-#
-# ~/.bashrc
-#
-
-[[ $- != *i* ]] && return
-
 [ -r /usr/share/bash-completion/bash_completion ] && . /usr/share/bash-completion/bash_completion
 
-# Change the window title of X terminals
-#case ${TERM} in
-#	xterm*|rxvt*|Eterm*|aterm|kterm|gnome*|interix|konsole*)
-#		PROMPT_COMMAND='echo -ne "\033]0;${USER}@${HOSTNAME%%.*}:${PWD/#$HOME/\~}\007"'
-#		;;
-#	screen*)
-#		PROMPT_COMMAND='echo -ne "\033_${USER}@${HOSTNAME%%.*}:${PWD/#$HOME/\~}\033\\"'
-#		;;
-#esac
-
-# Set colorful PS1 only on colorful terminals.
-# dircolors --print-database uses its own built-in database
-# instead of using /etc/DIR_COLORS.  Try to use the external file
-# first to take advantage of user additions.  Use internal bash
-# globbing instead of external grep binary.
-safe_term=${TERM//[^[:alnum:]]/?}   # sanitize TERM
-match_lhs=""
-[[ -f ~/.dir_colors   ]] && match_lhs="${match_lhs}$(<~/.dir_colors)"
-[[ -f /etc/DIR_COLORS ]] && match_lhs="${match_lhs}$(</etc/DIR_COLORS)"
-[[ -z ${match_lhs}    ]] \
-        && type -P dircolors >/dev/null \
-        && match_lhs=$(dircolors --print-database)
-[[ $'\n'${match_lhs} == *$'\n'"TERM "${safe_term}* ]] && use_color=true
-
-if type -P dircolors >/dev/null ; then
-    if [[ -f ~/.dir_colors ]] ; then
-        eval $(dircolors -b ~/.dir_colors)
-    elif [[ -f /etc/DIR_COLORS ]] ; then
-        eval $(dircolors -b /etc/DIR_COLORS)
-    fi
-fi
+eval "$(dircolors ~/.dir_colors)"
 
 if [[ ${EUID} == 0 ]] ; then
     PS1='\[\033[01;31m\][\h\[\033[01;36m\] \W\[\033[01;31m\]]\$\[\033[00m\] '
@@ -45,10 +9,6 @@ else
 fi
 
 unset safe_term match_lhs sh
-
-xhost +local:root > /dev/null 2>&1
-
-complete -cf sudo
 
 # Bash won't get SIGWINCH if another process is in the foreground.
 # Enable checkwinsize so that bash will check the terminal size when
@@ -63,4 +23,7 @@ shopt -s histappend
 
 source ~/.alias
 source ~/.export
-source ~/.local/bin/sd-completion.bash
+
+for file in $HOME/\.local/bin/completions/bash/*; do
+    source $file
+done

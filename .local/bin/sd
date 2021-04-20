@@ -1,31 +1,46 @@
 #!/usr/bin/env bash
 
-full_path="~/.sd"
+full_path=$(eval echo "~/.sd")
 
 help_mode=0
 
-if [ "$1" == "help" ]
+if [[ $# -ge 1 ]] && [ "$1" == "help" ]
 then
     help_mode=1
     shift
 fi
 
+if [[ $# -eq 0 ]]; then
+    echo "At least one component must be provided."
+    exit
+fi
+
+completed_path=0
+
+params=""
+
 for arg in "$@"
 do
-    full_path+="/$arg"
+    if [[ $completed_path -eq 1 ]]; then
+        params+=" $arg"
+    else
+        full_path+="/$arg"
+    fi
+
+    if [ ! $completed_path -eq 1 ] && [[ -f $full_path ]]; then
+        completed_path=1
+    fi
 done
 
-full_path="$(eval echo "$full_path")"
-
-if [[ -d "$full_path" ]]
+if [[ $help_mode -eq 0 ]] && [[ -d "$full_path" ]]
 then
     echo "The provided script path is incomplete."
     exit
 fi
 
-if [[ ! -f "$full_path" ]]
+if [[ ! -e "$full_path" ]]
 then
-    echo "The provided script does not exist."
+    echo "The provided path does not exist."
     exit
 fi
 
@@ -36,8 +51,12 @@ then
     then
         cat "$help_path"
     else
-        echo "No help is available for this script."
+        item_type="script"
+        if [[ -d "$full_path" ]]; then
+            item_type="group"
+        fi
+        echo "No help is available for this $item_type."
     fi
 else
-    exec "$full_path"
+    exec "$full_path" $params
 fi

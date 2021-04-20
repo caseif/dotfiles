@@ -3,6 +3,8 @@
 alias cp='cp -i'
 alias tree='tree -a'
 alias ls='ls --color=auto -a'
+alias rm='rm -I'
 alias grep='grep --colour=auto'
 alias egrep='egrep --colour=auto'
 alias fgrep='fgrep --colour=auto'
+alias open='xdg-open'

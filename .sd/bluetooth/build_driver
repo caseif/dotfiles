@@ -1,0 +1,4 @@
+#!/bin/bash
+
+cd ~/Documents/drivers/8761bu/Linux_BT_USB_v3.10_20200302_8761BU_BTCOEX_20190327-0202
+sudo make install
