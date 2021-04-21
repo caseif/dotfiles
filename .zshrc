@@ -51,6 +51,27 @@ bindkey "^[[3;5~"   kill-word
 unsetopt notify
 # End of lines configured by zsh-newuser-install
 
+P10K_OS_ICON_COLOR=7
+os_name="$(uname)"
+if [[ $os_name == "Linux" ]]; then
+    if [[ -r /etc/os-release ]]; then
+        local lines=(${(f)"$(</etc/os-release)"})
+        local id_lines=(${(@M)lines:#ID=*})
+        if [ $#id_lines -eq 1 ]; then
+            local os_release_id=${id_lines[1]#ID=}
+            case $os_release_id in
+                *manjaro*)      P10K_OS_ICON_COLOR=048;;
+                *debian*)       P10K_OS_ICON_COLOR=160;;
+                *linuxmint*)    P10K_OS_ICON_COLOR=154;;
+                *ubuntu*)       P10K_OS_ICON_COLOR=202;;
+                *arch*)         P10K_OS_ICON_COLOR=039;;
+                *raspbian*)     P10K_OS_ICON_COLOR=197;;
+                *)              ;;
+            esac
+        fi
+    fi
+fi
+
 source ~/.alias
 source ~/.export
 
