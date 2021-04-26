@@ -1,0 +1,119 @@
+#!/usr/bin/env bash
+
+RDP_CMD_X11="xfreerdp"
+RDP_CMD_WAYLAND="wlfreerdp"
+
+has_xfreerdp=$(($(command -v "$RDP_CMD_X11" > /dev/null; echo "$?") ^ 1))
+has_wlfreerdp=$(($(command -v "$RDP_CMD_WAYLAND" > /dev/null; echo "$?") ^ 1))
+
+if [[ $has_xfreerdp -eq 0 ]] && [[ $has_wlfreerdp -eq 0 ]]; then
+    echo "This script requires xfreerdp or wlfreerdp to be installed."
+    exit 1
+fi
+
+got_dm=0
+got_host=0
+got_user=0
+got_gfx=0
+
+dm=""
+fullscreen=0
+multimon=0
+quality=0
+gfx=""
+
+rdp_cmd=""
+
+while getopts d:h:u:g:fmq opt; do
+    case $opt in
+        d ) got_dm=1;dm=$OPTARG     ;;
+        h ) got_host=1;host=$OPTARG ;;
+        u ) got_user=1;user=$OPTARG ;;
+        g ) got_gfx=1;gfx=$OPTARG   ;;
+        f ) fullscreen=1            ;;
+        m ) multimon=1              ;;
+        q ) quality=1               ;;
+        ? ) exit 1                  ;;
+        : ) exit 1                  ;;
+    esac
+done
+
+if [[ ! got_host -eq 1 ]]; then
+    echo "Host is required"
+    exit 1
+fi
+
+if [[ ! got_user -eq 1 ]]; then
+    echo "Username is required"
+    exit 1
+fi
+
+if [[ got_dm -eq 1 ]]; then
+    if [ $dm == "x" ] || [ $dm == "x11" ]; then
+        if [[ $has_xfreerdp -eq 0 ]]; then
+            echo "FreeRDP X11 frontend is not installed/available"
+            exit 1
+        fi
+
+        echo "Using X11 FreeRDP frontend as requested"
+
+        rdp_cmd=$RDP_CMD_X11
+    elif [ $dm == "wayland" ]; then
+        if [ -z "${WAYLAND_DISPLAY}" ]; then
+            echo "Cannot use Wayland frontend on non-Wayland session"
+            exit 1
+        fi
+
+        if [[ $has_wlfreerdp -eq 0 ]]; then
+            echo "FreeRDP Wayland frontend is not installed/available"
+            exit 1
+        fi
+
+        echo "Using Wayland FreeRDP frontend as requested"
+
+        rdp_cmd=$RDP_CMD_WAYLAND
+    else
+        echo "Display manager value is not valid"
+        exit 1
+    fi
+else
+    if [ ! -z "${WAYLAND_DISPLAY}" ]; then
+        if [[ $has_wlfreerdp -eq 1 ]]; then
+            echo "Detected Wayland session; using appropriate FreeRDP frontend"
+            rdp_cmd=$RDP_CMD_WAYLAND
+        else
+            echo "Detected Wayland session but appropriate FreeRDP frontend is not available; falling back to X11 frontend"
+            rdp_cmd=$RDP_CMD_X11
+        fi
+    else
+        echo "Detected X11 session; using appropriate FreeRDP frontend"
+        rdp_cmd=$RDP_CMD_X11
+    fi
+fi
+
+multitouch_flag=""
+if [ "$rdp_cmd" == "$RDP_CMD_WAYLAND" ]; then
+    multitouch_flag="+multitouch"
+fi
+
+gfx_flag=""
+if [[ $got_gfx -eq 1 ]]; then
+    gfx_flag="/gfx:$gfx"
+fi
+
+fullscreen_flag=""
+if [[ $fullscreen -eq 1 ]]; then
+    fullscreen_flag="/f"
+fi
+
+multimon_flag=""
+if [[ $multimon -eq 1 ]]; then
+    multimon_flag="/multimon"
+fi
+
+quality_flags=""
+if [[ $quality -eq 1 ]]; then
+    quality_flags="+aero +window-drag"
+fi
+
+eval "$rdp_cmd /v:$host /u:$user $gfx_flag $fullscreen_flag $multimon_flag $quality_flags $multitouch_flag"

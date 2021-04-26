@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+sd rdp generic -d x11 -mq $@
