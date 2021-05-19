@@ -36,15 +36,39 @@ zmodload -a complist
 autoload -Uz compinit
 compinit
 
+backward-soft-delete-word () {
+   local WORDCHARS='~!#$%^&*(){}[]<>?+;'
+   zle backward-delete-word
+}
+zle -N backward-soft-delete-word
+
+soft-delete-word () {
+   local WORDCHARS='~!#$%^&*(){}[]<>?+;'
+   zle delete-word
+}
+zle -N soft-delete-word
+
+soft-backward-word () {
+   local WORDCHARS='~!#$%^&*(){}[]<>?+;'
+   zle backward-word
+}
+zle -N soft-backward-word
+
+soft-forward-word () {
+   local WORDCHARS='~!#$%^&*(){}[]<>?+;'
+   zle forward-word
+}
+zle -N soft-forward-word
+
 bindkey "^[[H"      beginning-of-line
 bindkey "^[[F"      end-of-line
 bindkey "^[[3~"     delete-char
 bindkey "^[[1;3D"   backward-word
-bindkey "^[[1;5D"   backward-word
+bindkey "^[[1;5D"   soft-backward-word
 bindkey "^[[1;3C"   forward-word
-bindkey "^[[1;5C"   forward-word
-bindkey "^H"        backward-delete-word
-bindkey "^[[3;5~"   delete-word
+bindkey "^[[1;5C"   soft-forward-word
+bindkey "^H"        backward-soft-delete-word
+bindkey "^[[3;5~"   soft-delete-word
 #bindkey -M menuselect '^[[Z' reverse-menu-complete
 
 # Lines configured by zsh-newuser-install
