@@ -14,3 +14,5 @@ ozone_platform_local=${XDG_SESSION_TYPE}
 #fi
 
 export OZONE_PLATFORM=$ozone_platform_local
+
+export MOZ_ENABLE_WAYLAND=1
