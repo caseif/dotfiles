@@ -5,3 +5,12 @@ export SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS=0
 export LIBVIRT_DEFAULT_URI=qemu:///system
 
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
+
+ozone_platform_local=${XDG_SESSION_TYPE}
+#if [ ! -z "${WAYLAND_DISPLAY}" ]; then
+#    ozone_platform_local=wayland
+#else
+#    ozone_platform_local=x11
+#fi
+
+export OZONE_PLATFORM=$ozone_platform_local
