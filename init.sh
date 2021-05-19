@@ -102,3 +102,5 @@ make_link .config/plasma-workspace/env/mixed_rr.sh
 make_link .local/bin/sd
 make_link .local/bin/completions/bash/_sd
 make_link .local/bin/completions/zsh/_sd
+make_link .local/share/applications/visual-studio-code.desktop
+make_link .local/share/applications/visual-studio-code-url-handler.desktop
