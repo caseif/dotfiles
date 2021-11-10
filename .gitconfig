@@ -5,7 +5,10 @@
 [user]
 	name = Max Roncace
 	email = me@caseif.net
+	signingkey = AB5B3305EB9D4E01
 [pull]
 	rebase = false
 [init]
 	defaultBranch = master
+[core]
+	editor = nano

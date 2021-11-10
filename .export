@@ -16,3 +16,7 @@ ozone_platform_local=${XDG_SESSION_TYPE}
 export OZONE_PLATFORM=$ozone_platform_local
 
 export MOZ_ENABLE_WAYLAND=1
+
+export PATH=~/.local/bin:~/.local/share/gem/ruby/3.0.0/bin:$PATH
+
+export MAKEFLAGS="-j$(($(grep -c "^processor" /proc/cpuinfo)-1))"
