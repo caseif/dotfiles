@@ -99,6 +99,9 @@ make_link .zshrc
 make_link .config/plasma-workspace/env/exports.sh
 make_link .config/plasma-workspace/env/mixed_rr.sh
 
+make_link .local/bin/set-primary-monitor.sh
+make_link .local/bin/start-duplicati.sh
+
 make_link .local/bin/sd
 make_link .local/bin/completions/bash/_sd
 make_link .local/bin/completions/zsh/_sd
