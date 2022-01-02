@@ -1,0 +1,6 @@
+Simple wrapper for easily passing specific flags to CMake commands.
+
+Flag    Description
+-a      Sets USE_ASAN to ON.
+-c      Sets Clang as the C and C++ compiler.
+-d      Sets CMAKE_BUILD_TYPE to Debug.

@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+got_asan=0
+got_clang=0
+got_debug=0
+
+while getopts acd opt; do
+    case $opt in
+        a) got_asan=1   ;;
+        c) got_clang=1  ;;
+        d) got_debug=1  ;;
+    esac
+done
+
+shift $((OPTIND-1))
+
+flags=""
+
+if [ $got_asan -eq 1 ]; then
+    flags="${flags} -DUSE_ASAN=1"
+fi
+
+if [ $got_clang  -eq 1 ]; then
+    flags="${flags} -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++"
+fi
+
+if [ $got_debug -eq 1 ]; then
+    flags="${flags} -DCMAKE_BUILD_TYPE=Debug"
+fi
+
+eval "cmake ${flags} $@"
