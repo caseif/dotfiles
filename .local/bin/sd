@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-full_path=$(eval echo "~/.sd")
+full_path=$(eval echo "$HOME/.sd")
 
 help_mode=0
 

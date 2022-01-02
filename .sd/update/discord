@@ -12,7 +12,7 @@ wget "$dl_url" -O "$dl_path"
 echo "Extracting archive..."
 sudo tar xzf "$dl_path" -C /opt/
 
-if [[ -d "/opt/Discord" ]]; then
+if [ -d "/opt/Discord" ]; then
     echo "Renaming archive output..."
     sudo mv "/opt/Discord" "/opt/discord"
 fi

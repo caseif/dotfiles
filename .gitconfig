@@ -12,3 +12,5 @@
 	defaultBranch = master
 [core]
 	editor = nano
+[color]
+	ui = auto

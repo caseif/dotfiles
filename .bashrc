@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 [ -r /usr/share/bash-completion/bash_completion ] && . /usr/share/bash-completion/bash_completion
 
 eval "$(dircolors ~/.dir_colors)"
