@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+if [[ "$EUID" = 0 ]]; then
+    echo "Do not run this script as root."
+    exit 1
+fi
+
+echo "Running pacman..."
+sudo pacman -Syu
+
+echo "Running yay (for AUR packages)..."
+yay -Syu
+
+echo "Running Flatpak..."
+flatpak update
