@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
+HISTFILE="$XDG_DATA_HOME"/bash/history
+
 [ -r /usr/share/bash-completion/bash_completion ] && . /usr/share/bash-completion/bash_completion
 
-eval "$(dircolors ~/.dir_colors)"
+eval "$(dircolors ~/.config/dotfiles/dir_colors)"
 
 if [[ ${EUID} == 0 ]] ; then
     PS1='\[\033[01;31m\][\h\[\033[01;36m\] \W\[\033[01;31m\]]\$\[\033[00m\] '
@@ -23,8 +25,8 @@ shopt -s expand_aliases
 # Enable history appending instead of overwriting.  #139609
 shopt -s histappend
 
-source ~/.alias
-source ~/.export
+source ~/.config/dotfiles/aliases
+source ~/.config/dotfiles/exports
 
 for file in $HOME/\.local/bin/completions/bash/*; do
     source $file

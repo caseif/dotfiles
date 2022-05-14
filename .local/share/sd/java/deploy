@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+if [[ $# -lt 2 ]]; then
+    echo "Artifact ID and version are required"
+    exit 1
+fi
+
+artifactId=$1
+artifactVersion=$2
+plugin=$3
+
+if [[ $plugin -eq "plugin" ]]; then
+    ./gradlew build generatePomFileForPluginMavenPublication
+else
+    ./gradlew build generatePomFileForMavenPublication
+fi
+targetDir=$PWD/build/repo
+
+rm -rf $targetDir
+
+mvn deploy:deploy-file -Durl=file://$targetDir -DrepositoryId=local -Dfile=./build/libs/$artifactId-$artifactVersion.jar -DpomFile=./build/publications/maven/pom-default.xml
+mvn deploy:deploy-file -Durl=file://$targetDir -DrepositoryId=local -Dfile=./build/libs/$artifactId-$artifactVersion-sources.jar -DpomFile=./build/publications/maven/pom-default.xml -Dclassifier=sources -DgeneratePom=false
+mvn deploy:deploy-file -Durl=file://$targetDir -DrepositoryId=local -Dfile=./build/libs/$artifactId-$artifactVersion-javadoc.jar -DpomFile=./build/publications/maven/pom-default.xml -Dclassifier=javadoc -DgeneratePom=false
+
+cd ./build/repo
+tar cf ../repo.tar .
+cd ../..

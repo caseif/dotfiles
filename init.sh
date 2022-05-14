@@ -36,33 +36,41 @@ if [ $quiet -eq 1 ] && [ $verbose -eq 1 ]; then
 fi
 
 make_link() {
-    verbose "Attempting to generate link for '$1'"
+    local rel_path=$1
+    local recursive_call=${2:-0}
 
-    target="$(pwd)/$1" link="$HOME/" link_dir="$HOME/"
-    target_dir+=$(dirname $1)
+    verbose "Attempting to generate link for '$rel_path'"
+
+    target="$(pwd)/$rel_path" link="$HOME/" link_dir="$HOME/"
+    target_dir+=$(dirname $rel_path)
     in_subdir=0
     if [ ! $target_dir == "." ]; then
-        verbose "Target '$1' is in subdirectory"
+        verbose "Target '$rel_path' is in subdirectory"
         link_dir+="$target_dir"
         in_subdir=1
     fi
 
-    link+=$1
+    link+=$rel_path
 
     if [ -f "$link" ] && [ ! -L "$link" ] && [ $force -eq 0 ]; then
-        info "'$1' already exists in home directory as regular file; refusing to overwrite. Re-run with -f to force overwrite."
+        info "'$rel_path' already exists in home directory as regular file; refusing to overwrite. Re-run with -f to force overwrite."
         return
     fi
 
     overwrite_link=0
     if [ -L "$link" ] && [ $force -eq 0 ]; then
-        verbose "'$1' exists in home directory as symlink; overwriting."
+        if [ -d "$link" ] && [ $recursive_call -eq 1 ]; then
+            verbose "'$rel_path' exists in home directory as directory symlink but we're running recursively; returning early"
+            return
+        fi
+
+        verbose "'$rel_path' exists in home directory as symlink; overwriting."
         overwrite_link=1
     fi
 
     if [ -d "$target" ] && [ $force -eq 1 ]; then
         verbose "Force-removing existing directory '$target'"
-        rm -rf "$link"
+        rm -rf "$target"
     fi
 
     if [ $in_subdir -eq 1 ]; then
@@ -72,38 +80,57 @@ make_link() {
 
     if [ $force -eq 1 ] || [[ $overwrite_link -eq 1 ]]; then
         verbose "Force-generating link '$link' to target '$target'"
-        ln -sf $target $link
+        if [ -d "$link" ]; then
+            ln -sf $target $link_dir
+        else
+            ln -sf $target $link
+        fi
     else
         verbose "Generating link '$link' to target '$target'"
-        ln -s $target $link
+        if [ -d "$link" ]; then
+            ln -s $target $link_dir
+        else
+            ln -s $target $link
+        fi
     fi
 
     unset target target_dir link link_dir in_subdir
 
-    verbose "Done generating link for '$1'"
+    verbose "Done generating link for '$rel_path'"
     verbose "------------------------------------------------"
 }
 
-make_link .alias
+make_links_recursively() {
+    local rel_path=$1
+
+    verbose "Recursively generating links for '$rel_path'"
+
+    target="$(pwd)/$rel_path"
+    link="$HOME/$rel_path"
+
+    if [ -L "$link" ] && [ -d "$link" ]; then
+        verbose "Skipping $target (already exists as a directory symlink)"
+        return
+    fi
+
+    if [ -f "$target" ]; then
+        make_link $rel_path 1
+        return
+    fi
+
+    for child in $target/*; do
+        [ -e "$child" ] || continue
+
+        child_base=$(basename $child)
+        verbose "Recursing with $rel_path/$child_base"
+        make_links_recursively "$rel_path/$child_base"
+    done
+}
+
 make_link .bashrc
-make_link .dir_colors
-make_link .export
-make_link .gitconfig
-make_link .nanorc
-make_link .p10k.zsh
-make_link .profile
-make_link .sd
-make_link .zplugins
 make_link .zshrc
+make_link .local/share/sd
+make_link .local/share/zsh/plugins/powerlevel10k
 
-make_link .config/plasma-workspace/env/exports.sh
-make_link .config/plasma-workspace/env/mixed_rr.sh
-
-make_link .local/bin/set-primary-monitor.sh
-make_link .local/bin/start-duplicati.sh
-
-make_link .local/bin/sd
-make_link .local/bin/completions/bash/_sd
-make_link .local/bin/completions/zsh/_sd
-make_link .local/share/applications/visual-studio-code.desktop
-make_link .local/share/applications/visual-studio-code-url-handler.desktop
+make_links_recursively .config
+make_links_recursively .local

@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+source "$HOME"/.config/dotfiles/exports-xdg
+
+export LC_COLLATE="C"
+
 export SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS=0
 
 export LIBVIRT_DEFAULT_URI=qemu:///system

@@ -7,21 +7,11 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-eval "$(dircolors ~/.dir_colors)"
+eval "$(dircolors ~/.config/dotfiles/dir_colors)"
 
 FPATH="$(echo ~/.local/bin/completions/zsh):$FPATH"
 
-# The following lines were added by compinstall
-
-#zstyle ':completion:*' insert-unambiguous false
-#zstyle ':completion:*' original true
-#zstyle :compinstall filename '/home/max/.zshrc'
-
-#autoload -Uz compinit
-#compinit
-# End of lines added by compinstall
-
-HISTFILE=~/.zhistfile
+HISTFILE=~/.local/share/zsh/histfile
 HISTSIZE=1000
 SAVEHIST=1000
 setopt appendhistory
@@ -36,7 +26,7 @@ zmodload -a autocomplete
 zmodload -a complist
 
 autoload -Uz compinit
-compinit
+compinit -d $XDG_CACHE_HOME/zsh/zcompdump-$ZSH_VERSION
 
 backward-soft-delete-word () {
    local WORDCHARS='~!#$%^&*(){}[]<>?+;'
@@ -98,10 +88,10 @@ if [[ $os_name == "Linux" ]]; then
     fi
 fi
 
-source ~/.alias
-source ~/.export
+source ~/.config/dotfiles/aliases
+source ~/.config/dotfiles/exports
 
-source ~/.zplugins/powerlevel10k/powerlevel10k.zsh-theme
+source ~/.local/share/zsh/plugins/powerlevel10k/powerlevel10k.zsh-theme
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+# To customize prompt, run `p10k configure` or edit ~/.local/share/zsh/p10k.zsh.
+[[ ! -f ~/.local/share/zsh/p10k.zsh ]] || source ~/.local/share/zsh/p10k.zsh
