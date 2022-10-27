@@ -1,6 +1,6 @@
 #compdef sd
 
-SD_ROOT="$HOME/.sd"
+SD_ROOT="$HOME/.local/share/sd"
 
 local running_path="$SD_ROOT"
 local is_help=0

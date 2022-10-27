@@ -14,6 +14,7 @@ sudo tar xzf "$dl_path" -C /opt/
 
 if [ -d "/opt/Discord" ]; then
     echo "Renaming archive output..."
+    sudo rm -rf "/opt/discord"
     sudo mv "/opt/Discord" "/opt/discord"
 fi
 
