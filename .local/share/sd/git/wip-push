@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+if [ $# -ne 1 ]; then
+    echo "Remote host is required"
+    exit 1
+fi
+
+host="$1"
+cwd="$(pwd)"
+
+git diff > diff.txt
+scp diff.txt $host:$cwd/diff.txt
+
+ssh $USER@$host "cd $cwd && git stash && git reset --hard && git pull && git apply diff.txt"
+
+rm diff.txt
