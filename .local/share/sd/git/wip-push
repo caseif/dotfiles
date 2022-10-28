@@ -8,6 +8,7 @@ fi
 host="$1"
 cwd="$(pwd)"
 
+git add -N .
 git diff > diff.txt
 scp diff.txt $host:$cwd/diff.txt
 
