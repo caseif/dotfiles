@@ -8,13 +8,15 @@ fi
 host="$1"
 cwd="$(pwd)"
 
-ssh $USER@$host "cd $cwd && git add -N . && git diff > diff.txt"
-scp $host:$cwd/diff.txt diff.txt
-ssh $USER@$host "rm $cwd/diff.txt"
-
+git add -N .
 git stash
 git reset --hard
 git pull
+
+ssh $USER@$host "cd $cwd && git reset && git add -N . && git diff --binary > diff.txt"
+scp $host:$cwd/diff.txt diff.txt
+ssh $USER@$host "rm $cwd/diff.txt"
+
 git apply diff.txt
 
 rm diff.txt

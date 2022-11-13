@@ -23,3 +23,5 @@ export MAKEFLAGS="-j$(($(grep -c "^processor" /proc/cpuinfo)-1))"
 export EDITOR=nano
 
 export PATH=~/.local/share/cargo/bin:$PATH
+
+export PLASMA_USE_QT_SCALING=1
