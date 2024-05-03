@@ -14,9 +14,8 @@ ozone_platform_local=${XDG_SESSION_TYPE}
 
 export OZONE_PLATFORM=$ozone_platform_local
 
-export MOZ_ENABLE_WAYLAND=1
-
-export PATH=~/.local/bin:~/.local/share/gem/ruby/3.0.0/bin:$PATH
+export GEM_HOME=~/.local/share/rubygems
+export PATH=~/.local/bin:~/.local/share/gem/ruby/3.0.0/bin:$GEM_HOME/bin:$PATH
 
 export MAKEFLAGS="-j$(($(grep -c "^processor" /proc/cpuinfo)-1))"
 
@@ -25,3 +24,8 @@ export EDITOR=nano
 export PATH=~/.local/share/cargo/bin:$PATH
 
 export PLASMA_USE_QT_SCALING=1
+
+export N64_LIBGCCDIR="/opt/crashsdk/lib/gcc/mips64-elf/12.2.0"
+export PATH=/opt/crashsdk/bin:$PATH
+
+export PATH=$XDG_DATA_HOME/JetBrains/Toolbox/scripts:$PATH
