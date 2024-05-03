@@ -2,12 +2,14 @@
 
 RDP_CMD_X11="xfreerdp"
 RDP_CMD_WAYLAND="wlfreerdp"
+RDP_CMD_SDL="sdl-freerdp"
 
 has_xfreerdp=$(($(command -v "$RDP_CMD_X11" > /dev/null; echo "$?") ^ 1))
 has_wlfreerdp=$(($(command -v "$RDP_CMD_WAYLAND" > /dev/null; echo "$?") ^ 1))
+has_sdlfreerdp=$(($(command -v "$RDP_CMD_SDL" > /dev/null; echo "$?") ^ 1))
 
-if [[ $has_xfreerdp -eq 0 ]] && [[ $has_wlfreerdp -eq 0 ]]; then
-    echo "This script requires xfreerdp or wlfreerdp to be installed."
+if [[ $has_xfreerdp -eq 0 ]] && [[ $has_wlfreerdp -eq 0 ]] && [[ $has_sdlfreerdp -eq 0 ]]; then
+    echo "This script requires xfreerdp, wlfreerdp, and/or sdl-freerdp to be installed."
     exit 1
 fi
 
@@ -73,6 +75,15 @@ if [[ got_dm -eq 1 ]]; then
         echo "Using Wayland FreeRDP frontend as requested"
 
         rdp_cmd=$RDP_CMD_WAYLAND
+    elif [ "$dm" == "sdl" ]; then
+        if [[ $has_sdlfreerdp -eq 0 ]]; then
+            echo "FreeRDP SDL backend is not installed/available"
+            exit 1
+        fi
+
+        echo "Using SDL FreeRDP backend as requested"
+
+        rdp_cmd=$RDP_CMD_SDL
     else
         echo "Display manager value is not valid"
         exit 1
@@ -114,7 +125,7 @@ fi
 
 quality_flags=""
 if [[ $quality -eq 1 ]]; then
-    quality_flags="+aero +window-drag"
+    quality_flags="+aero"
 fi
 
 eval "$rdp_cmd /v:$host /u:$user $gfx_flag $fullscreen_flag $multimon_flag $quality_flags $multitouch_flag $@"
