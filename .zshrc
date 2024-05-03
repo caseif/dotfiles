@@ -76,12 +76,13 @@ if [[ $os_name == "Linux" ]]; then
         if [ $#id_lines -eq 1 ]; then
             local os_release_id=${id_lines[1]#ID=}
             case $os_release_id in
-                *manjaro*)      P10K_OS_ICON_COLOR=048;;
-                *debian*)       P10K_OS_ICON_COLOR=160;;
-                *linuxmint*)    P10K_OS_ICON_COLOR=154;;
-                *ubuntu*)       P10K_OS_ICON_COLOR=202;;
                 *arch*)         P10K_OS_ICON_COLOR=039;;
+                *debian*)       P10K_OS_ICON_COLOR=160;;
+                *fedora*)       P10K_OS_ICON_COLOR=012;;
+                *linuxmint*)    P10K_OS_ICON_COLOR=154;;
+                *manjaro*)      P10K_OS_ICON_COLOR=048;;
                 *raspbian*)     P10K_OS_ICON_COLOR=197;;
+                *ubuntu*)       P10K_OS_ICON_COLOR=202;;
                 *)              ;;
             esac
         fi
