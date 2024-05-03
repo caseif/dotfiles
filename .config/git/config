@@ -8,9 +8,15 @@
 	signingkey = AB5B3305EB9D4E01
 [pull]
 	rebase = false
+[push]
+    autoSetupRemote = true
 [init]
 	defaultBranch = master
 [core]
 	editor = nano
 [color]
 	ui = auto
+[url "https://invent.kde.org/"]
+	insteadOf = kde:
+[url "ssh://git@invent.kde.org/"]
+	pushInsteadOf = kde:
