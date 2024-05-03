@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
-HISTFILE="$XDG_DATA_HOME"/bash/history
+source ~/.config/dotfiles/aliases
+source ~/.config/dotfiles/exports
+
+HISTFILE="$XDG_STATE_HOME"/bash/history
 
 [ -r /usr/share/bash-completion/bash_completion ] && . /usr/share/bash-completion/bash_completion
 
@@ -25,9 +28,8 @@ shopt -s expand_aliases
 # Enable history appending instead of overwriting.  #139609
 shopt -s histappend
 
-source ~/.config/dotfiles/aliases
-source ~/.config/dotfiles/exports
-
 for file in $HOME/\.local/bin/completions/bash/*; do
     source $file
 done
+
+source "/home/max/.local/share/cargo/env"
